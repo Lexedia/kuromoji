@@ -1,5 +1,5 @@
 name: kuromoji
-description: A sample command-line application.
+description: Tokenize Japanese text using dictionaries defined by the Atilika project.
 version: 1.0.0
 repository: https://github.com/Lexedia/kuromoji
 
