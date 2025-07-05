@@ -1,6 +1,6 @@
 # Kuromoji
 
-A re-implementation of [kuromoji.js](https:
+A re-implementation of [kuromoji.js](https://github.com/takuyaa/kuromoji.js) in Dart.
 
 ## Usage
 
