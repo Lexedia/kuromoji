@@ -10,10 +10,10 @@ class ViterbiBuilder {
 
   ViterbiLattice build(String text) {
     final lattice = ViterbiLattice.create();
-    final bd = dictionaries.tokenInfoDictionary.buffer.buffer.buffer
-        .asByteData();
-    final ubd = dictionaries.unknownDictionary.buffer.buffer.buffer
-        .asByteData();
+    final bd =
+        dictionaries.tokenInfoDictionary.buffer.buffer.buffer.asByteData();
+    final ubd =
+        dictionaries.unknownDictionary.buffer.buffer.buffer.asByteData();
 
     String key;
     for (var pos = 0; pos < text.length; pos++) {
@@ -48,15 +48,14 @@ class ViterbiBuilder {
 
       final char = tail.substring(0, 1);
       final charClass = dictionaries.characterDefinition.lookup(char);
-      if (charClass != null ||
-          vocabulary.isEmpty ||
-          charClass?.isInvoke == true) {
+      if (vocabulary.isEmpty || charClass?.isInvoke == true) {
         key = char;
         if (charClass?.isGrouping == true && tail.length > 1) {
           for (var k = 1; k < tail.length; k++) {
             var rune = tail.runes.elementAt(k);
             final nextChar = String.fromCharCode(rune);
-            final nextCharClass = dictionaries.characterDefinition.lookup(nextChar);
+            final nextCharClass =
+                dictionaries.characterDefinition.lookup(nextChar);
             if (charClass?.category != (nextCharClass?.category ?? '')) {
               break;
             }
