@@ -1,3 +1,4 @@
 tools/**
 .dart_tool
 pubspec.lock
+dict/**
