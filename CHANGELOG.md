@@ -1,3 +1,6 @@
+## 1.0.3
+- Removed embedded dicts.
+
 ## 1.0.2
 - Fixed a condition that'd add more tokens than necessary
 

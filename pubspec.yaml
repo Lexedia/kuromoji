@@ -1,13 +1,12 @@
 name: kuromoji
 description: Tokenize Japanese text using dictionaries defined by the Atilika project.
-version: 1.0.2
+version: 1.0.3
 repository: https://github.com/Lexedia/kuromoji
 
 environment:
   sdk: ^3.0.0
 
 dependencies:
-  archive: ^4.0.7
   http: ^1.4.0
   path: ^1.9.1
 
