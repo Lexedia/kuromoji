@@ -1,3 +1,6 @@
+## 1.0.4
+- This reverts the change made in 1.0.3 to remove embedded dicts, AoT compilation would fail.
+
 ## 1.0.3
 - Removed embedded dicts.
 
