@@ -1,47 +1,40 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:archive/archive.dart';
-import 'package:kuromoji/src/dict/data/base.dat.dart';
-import 'package:kuromoji/src/dict/data/cc.dat.dart';
-import 'package:kuromoji/src/dict/data/check.dat.dart';
-import 'package:kuromoji/src/dict/data/tid.dat.dart';
-import 'package:kuromoji/src/dict/data/tid_map.dat.dart';
-import 'package:kuromoji/src/dict/data/tid_pos.dat.dart';
-import 'package:kuromoji/src/dict/data/unk.dat.dart';
-import 'package:kuromoji/src/dict/data/unk_char.dat.dart';
-import 'package:kuromoji/src/dict/data/unk_compat.dat.dart';
-import 'package:kuromoji/src/dict/data/unk_invoke.dat.dart';
-import 'package:kuromoji/src/dict/data/unk_map.dat.dart';
-import 'package:kuromoji/src/dict/data/unk_pos.dat.dart';
+
+import 'package:kuromoji/src/util/util.dart';
 
 class DictionaryLoader {
+  late final Directory dictDir;
+
   DictionaryLoader();
 
   Future<Map<String, Uint8List>> load() async {
-    final decoder = GZipDecoder();
-
-    return {
-      'base.dat': decoder.decodeBytes(baseData),
-      'cc.dat': decoder.decodeBytes(ccData),
-      'check.dat': decoder.decodeBytes(checkData),
-      'tid_map.dat': decoder.decodeBytes(tid_mapData),
-      'tid_pos.dat': decoder.decodeBytes(tid_posData),
-      'tid.dat': decoder.decodeBytes(tidData),
-      'unk_char.dat': decoder.decodeBytes(unk_charData),
-      'unk_compat.dat': decoder.decodeBytes(unk_compatData),
-      'unk_invoke.dat': decoder.decodeBytes(unk_invokeData),
-      'unk_map.dat': decoder.decodeBytes(unk_mapData),
-      'unk_pos.dat': decoder.decodeBytes(unk_posData),
-      'unk.dat': decoder.decodeBytes(unkData),
+    dictDir = await getDictDir();
+    final files = {
+      'base.dat',
+      'cc.dat',
+      'check.dat',
+      'tid_map.dat',
+      'tid_pos.dat',
+      'tid.dat',
+      'unk_char.dat',
+      'unk_compat.dat',
+      'unk_invoke.dat',
+      'unk_map.dat',
+      'unk_pos.dat',
+      'unk.dat',
     };
+
+    Map<String, Uint8List> out = {};
+
+    for (final file in files) {
+      out[file] = Uint8List.fromList(gzip.decode(await File('${dictDir.path}/$file.gz').readAsBytes()));
+    }
+
+    return out;
   }
 
-  Future<Uint8List> loadData(String url) async {
-    final file = File(url);
-    if (file.existsSync()) {
-      return await file.readAsBytes();
-    } else {
-      throw Exception('Dictionary file not found at $url');
-    }
+  Future<Uint8List> loadCharDef() {
+    return File('${dictDir.path}/char.def').readAsBytes();
   }
 }
