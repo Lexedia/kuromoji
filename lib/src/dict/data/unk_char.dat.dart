@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
-final unk_charData = Uint16List.fromList(_embeddedData.codeUnits).buffer.asUint8List();
+final Uint8List unk_charData = base64Decode(_embeddedData);
 
-const _embeddedData = '\u8b1f\u0008\u0000\u0000\u0300\udced\uaa81\u3082\u0014\u3450\uf97b\uffde\u707f\u8af5\u4b20\ub6d4\u5d79\u439e\ua812\u776c\uf3bb\u0c16\u9a6c\u8709\udd67\ufdc3\u71c4\u9cd4\u53eb\ubfbd\u3ff4\ude34\u053c\ue74d\u518d\u1bbf\u8d71\u6fe5\u6eb7\u78b9\u167f\u0000\u0000\ua000\ud15e\u891b\ua271\u7e67\u261b\ud7b6\uebb3\u5a16\ube3b\u4b54\u57c7\u78fb\udba9\ud5b7\ua597\u1f36\u2520\u3f49\u4aa1\udfd7\uebda\u6533\uaf45\uf63f\u0dad\udd10\u797f\ue7f3\ub93f\ufc7e\ud594\uca9c\ubdca\ub79e\u386e\u1cfe\u21bf\udb15\ufffd\ue89f\u054a\u0000\u0000\uc000\ube55\uc0fd\u6dbe\u9f2f\ud1cb\u0817\u6173\ufd9b\u1be0\u90d6\udebe\ub566\ue650\u2319\uac96\u16c2\u2e79\u0001\u0000\u0000\u6000\ub615\u01e8\u0000\u0000\u0000\u0000\u6f80\uef95\u8f7d\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u45a5\ud9bf\u2eb9\uf349\u9d15\u206a\u21d1\u7441\u6fec\u620d\u1eec\u31ee\u471f\u6edd\uba98\ueffe\ub1f4\uc3cc\uc97b\u19c1\ua603\ueac0\u0000\u0001';
+const _embeddedData = 'H4sIAAAAAAAAA+3cgaqCMBQAUDR7+d7/f3D1iiBL1LZ5XZ5DEqhsd7vzFgxsmgmHZ93D/cRx1JzrU72/9D803jwFTeeNUb8bcY3lb7duuXh/FgAAAAAAoF7RG4lxomd+Gya217PrFlo7vlRLx1f7eKnbt9WXpTYfICVJP6FK19/a6zNlRa8/9q0NEN1/efPnP7l+/JTVnMrKvZ63bjj+HL8hFdv9/5/oSgUAAAAAAMBVvv3Avm0vn8vRFwhzYZv94BvWkL7eZrVQ5hkjlqzCFnkuAQAAAAAAAGAVtugBAAAAAAAAAACAb5XvfY8AAAAAAAAAAAAAAAAAAAAAAAAAAAAApUW/2bkuSfMVnWog0SFBdOxvDWLsHu4xH0fdbpi6/u/0sczDe8nBGQOmwOoAAAEA';

@@ -1,29 +1,39 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
+
 import 'package:path/path.dart' as path;
 
 void main(List<String> args) async {
   final dictDir = Directory('dict');
-  final e = await dictDir.list().where((e) => e is File).cast<File>().toList();
+  if (!await dictDir.exists()) {
+    print('Error: "dict" directory not found.');
+    return;
+  }
 
-  for (final f in e) {
+  final files =
+      await dictDir.list().where((e) => e is File).cast<File>().toList();
+
+  for (final f in files) {
+    final fileName = path.basenameWithoutExtension(f.path);
+    print('Processing $fileName...');
+
     final contents = await f.readAsBytes();
+    final variableName =
+        fileName.replaceAll('.dat', '').replaceAll('.def', '') + 'Data';
+
+    // Use base64 encoding to support all file lengths safely
+    final encoded = base64Encode(contents);
+
     await File(
-      'lib/src/dict/data/${path.basenameWithoutExtension(f.path)}.dart',
+      'lib/src/dict/data/$fileName.dart',
     ).writeAsString('''
+import 'dart:convert';
 import 'dart:typed_data';
 
-final ${path.basenameWithoutExtension(f.path).replaceAll('.dat', '').replaceAll('.def', '')}Data = Uint16List.fromList(_embeddedData.codeUnits).buffer.asUint8List();
+final Uint8List $variableName = base64Decode(_embeddedData);
 
-const _embeddedData = '${bytesAsString(contents)}';
+const _embeddedData = '$encoded';
 ''');
   }
-}
-
-String bytesAsString(Uint8List bytes) {
-  assert(bytes.length.isEven);
-  return bytes.buffer
-      .asUint16List()
-      .map((u) => '\\u${u.toRadixString(16).padLeft(4, '0')}')
-      .join();
+  print('Done embedding dictionaries.');
 }
