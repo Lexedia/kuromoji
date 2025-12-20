@@ -1,6 +1,5 @@
 class IpadicFormatter {
-  Map<String, dynamic> formatEntry(
-      int wordId, int position, String type, List<String> features) {
+  Map<String, dynamic> formatEntry(int wordId, int position, String type, List<String> features) {
     return {
       'word_id': wordId,
       'word_position': position,
@@ -18,8 +17,8 @@ class IpadicFormatter {
     };
   }
 
-  Map<String, dynamic> formatUnknownEntry(int wordId, int position, String type,
-      List<String> features, String surfaceForm) {
+  Map<String, dynamic> formatUnknownEntry(
+      int wordId, int position, String type, List<String> features, String surfaceForm) {
     return {
       'word_id': wordId,
       'word_position': position,

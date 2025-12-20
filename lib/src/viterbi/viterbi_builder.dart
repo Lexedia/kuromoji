@@ -10,10 +10,8 @@ class ViterbiBuilder {
 
   ViterbiLattice build(String text) {
     final lattice = ViterbiLattice.create();
-    final bd =
-        dictionaries.tokenInfoDictionary.buffer.buffer.buffer.asByteData();
-    final ubd =
-        dictionaries.unknownDictionary.buffer.buffer.buffer.asByteData();
+    final bd = dictionaries.tokenInfoDictionary.buffer.buffer.buffer.asByteData();
+    final ubd = dictionaries.unknownDictionary.buffer.buffer.buffer.asByteData();
 
     String key;
     for (var pos = 0; pos < text.length; pos++) {
@@ -24,8 +22,7 @@ class ViterbiBuilder {
         final trieId = entry['v'] as int;
         key = entry['k'] as String;
 
-        final tokenInfoIds =
-            dictionaries.tokenInfoDictionary.targetMap[trieId] ?? [];
+        final tokenInfoIds = dictionaries.tokenInfoDictionary.targetMap[trieId] ?? [];
         for (final tokenId in tokenInfoIds) {
           final leftId = bd.getInt16(tokenId, Endian.little);
           final rightId = bd.getInt16(tokenId + 2, Endian.little);
@@ -54,16 +51,14 @@ class ViterbiBuilder {
           for (var k = 1; k < tail.length; k++) {
             var rune = tail.runes.elementAt(k);
             final nextChar = String.fromCharCode(rune);
-            final nextCharClass =
-                dictionaries.characterDefinition.lookup(nextChar);
+            final nextCharClass = dictionaries.characterDefinition.lookup(nextChar);
             if (charClass?.category != (nextCharClass?.category ?? '')) {
               break;
             }
             key += nextChar;
           }
         }
-        final unkIds =
-            dictionaries.unknownDictionary.targetMap[charClass!.classId] ?? [];
+        final unkIds = dictionaries.unknownDictionary.targetMap[charClass!.classId] ?? [];
         for (final unkId in unkIds) {
           final leftId = ubd.getInt16(unkId, Endian.little);
           final rightId = ubd.getInt16(unkId + 2, Endian.little);

@@ -42,16 +42,13 @@ class Tokenizer {
     if (node.type == 'KNOWN') {
       final featuresLine = dictionaries.tokenInfoDictionary.getFeatures(node.name);
       final features = featuresLine?.split(',') ?? [];
-      return formatter.formatEntry(
-          node.name, lastPos + node.startPos, node.type, features);
+      return formatter.formatEntry(node.name, lastPos + node.startPos, node.type, features);
     } else if (node.type == 'UNKNOWN') {
       final featuresLine = dictionaries.unknownDictionary.getFeatures(node.name);
       final features = featuresLine?.split(',') ?? [];
-      return formatter.formatUnknownEntry(node.name,
-          lastPos + node.startPos, node.type, features, node.surfaceForm!);
+      return formatter.formatUnknownEntry(node.name, lastPos + node.startPos, node.type, features, node.surfaceForm!);
     } else {
-      return formatter.formatEntry(
-        node.name, lastPos + node.startPos, node.type, []);
+      return formatter.formatEntry(node.name, lastPos + node.startPos, node.type, []);
     }
   }
 
