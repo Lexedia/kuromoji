@@ -57,8 +57,7 @@ class _BaseCheck {
     baseNewArray.setAll(0, _base);
     _base = baseNewArray;
 
-    final checkNewArray =
-        _newIntArrayBuffer(_checkSigned, _checkBytes, newSize);
+    final checkNewArray = _newIntArrayBuffer(_checkSigned, _checkBytes, newSize);
     _initCheck(checkNewArray, _check.length, newSize);
     checkNewArray.setAll(0, _check);
     _check = checkNewArray;
@@ -140,11 +139,7 @@ class _BaseCheck {
         unusedCount++;
       }
     }
-    return {
-      'all': currentSize,
-      'unused': unusedCount,
-      'efficiency': (currentSize - unusedCount) / currentSize
-    };
+    return {'all': currentSize, 'unused': unusedCount, 'efficiency': (currentSize - unusedCount) / currentSize};
   }
 
   String dump() {
@@ -401,10 +396,7 @@ class DoubleArray {
           final base = bc.getBase(grandChild);
 
           if (base <= 0) {
-            result.add({
-              'v': -base - 1,
-              'k': _utf8BytesToString(_arrayCopy(buffer, 0, i + 1))
-            });
+            result.add({'v': -base - 1, 'k': _utf8BytesToString(_arrayCopy(buffer, 0, i + 1))});
           }
         }
         continue;
@@ -450,11 +442,9 @@ class DoubleArrayTrie {
 Int32List _newIntArrayBuffer(bool signed, int bytes, int size) {
   switch (bytes) {
     case 1:
-      throw UnsupportedError(
-          "1-byte integer arrays are not directly used for Base/Check in this context.");
+      throw UnsupportedError("1-byte integer arrays are not directly used for Base/Check in this context.");
     case 2:
-      throw UnsupportedError(
-          "2-byte integer arrays are not directly used for Base/Check in this context.");
+      throw UnsupportedError("2-byte integer arrays are not directly used for Base/Check in this context.");
     case 4:
       return Int32List(size);
     default:

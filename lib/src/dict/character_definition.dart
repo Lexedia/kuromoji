@@ -31,8 +31,7 @@ class CharacterDefinition {
     final invoke = int.parse(parts[1]);
     final grouping = int.parse(parts[2]);
     final maxLength = int.parse(parts[3]);
-    final charClass = CharacterClass(
-        classId, category, invoke == 1, grouping == 1, maxLength);
+    final charClass = CharacterClass(classId, category, invoke == 1, grouping == 1, maxLength);
     invokeDefinitionMap.characterClasses.add(charClass);
     invokeDefinitionMap.categoryToId[category] = classId;
   }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:path/path.dart' as path;
 
 void main(List<String> args) async {
@@ -10,16 +9,14 @@ void main(List<String> args) async {
     return;
   }
 
-  final files =
-      await dictDir.list().where((e) => e is File).cast<File>().toList();
+  final files = await dictDir.list().where((e) => e is File).cast<File>().toList();
 
   for (final f in files) {
     final fileName = path.basenameWithoutExtension(f.path);
     print('Processing $fileName...');
 
     final contents = await f.readAsBytes();
-    final variableName =
-        fileName.replaceAll('.dat', '').replaceAll('.def', '') + 'Data';
+    final variableName = fileName.replaceAll('.dat', '').replaceAll('.def', '') + 'Data';
 
     // Use base64 encoding to support all file lengths safely
     final encoded = base64Encode(contents);
