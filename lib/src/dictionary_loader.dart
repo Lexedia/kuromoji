@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:kuromoji/src/dict/data/base.dat.dart';
@@ -34,14 +33,5 @@ class DictionaryLoader {
       'unk_pos.dat': decoder.decodeBytes(unk_posData),
       'unk.dat': decoder.decodeBytes(unkData),
     };
-  }
-
-  Future<Uint8List> loadData(String url) async {
-    final file = File(url);
-    if (file.existsSync()) {
-      return await file.readAsBytes();
-    } else {
-      throw Exception('Dictionary file not found at $url');
-    }
   }
 }
