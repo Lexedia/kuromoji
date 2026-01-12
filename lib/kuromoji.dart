@@ -7,15 +7,15 @@ import 'src/tokenizer.dart';
 class TokenizerBuilder {
   TokenizerBuilder();
 
-  Future<Tokenizer> build() async {
+  Tokenizer build() {
     final loader = DictionaryLoader();
-    final data = await loader.load();
-    final charDef = await _loadCharDef();
+    final data = loader.load();
+    final charDef = _loadCharDef();
     final dictionaries = DynamicDictionaries(data, charDef);
     return Tokenizer(dictionaries);
   }
 
-  Future<Uint8List> _loadCharDef() async {
+  Uint8List _loadCharDef() {
     return charData;
   }
 }

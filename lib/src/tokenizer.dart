@@ -1,35 +1,33 @@
 import 'package:kuromoji/src/dict/dynamic_dictionaries.dart';
+import 'package:kuromoji/src/token.dart';
 import 'package:kuromoji/src/viterbi/viterbi_builder.dart';
 import 'package:kuromoji/src/viterbi/viterbi_searcher.dart';
-import 'package:kuromoji/src/util/ipadict_formatter.dart';
 import 'package:kuromoji/src/viterbi/viterbi_node.dart';
 
 class Tokenizer {
   final DynamicDictionaries dictionaries;
   final ViterbiBuilder viterbiBuilder;
   final ViterbiSearcher viterbiSearcher;
-  final IpadicFormatter formatter;
 
   Tokenizer(this.dictionaries)
       : viterbiBuilder = ViterbiBuilder(dictionaries),
-        viterbiSearcher = ViterbiSearcher(dictionaries.connectionCosts),
-        formatter = IpadicFormatter();
+        viterbiSearcher = ViterbiSearcher(dictionaries.connectionCosts);
 
-  List<Map<String, dynamic>> tokenize(String text) {
+  List<UnknownToken> tokenize(String text) {
     final sentences = _splitByPunctuation(text);
-    final tokens = <Map<String, dynamic>>[];
+    final tokens = <UnknownToken>[];
     for (final sentence in sentences) {
       _tokenizeForSentence(sentence, tokens);
     }
     return tokens;
   }
 
-  void _tokenizeForSentence(String sentence, List<Map<String, dynamic>> tokens) {
+  void _tokenizeForSentence(String sentence, List<UnknownToken> tokens) {
     final lattice = viterbiBuilder.build(sentence);
     final bestPath = viterbiSearcher.search(lattice);
     var lastPos = 0;
     if (tokens.isNotEmpty) {
-      lastPos = tokens.last['word_position'] as int;
+      lastPos = tokens.last.wordPosition;
     }
 
     for (final node in bestPath) {
@@ -38,18 +36,10 @@ class Tokenizer {
     }
   }
 
-  Map<String, dynamic> _formatNode(ViterbiNode node, int lastPos) {
-    if (node.type == 'KNOWN') {
-      final featuresLine = dictionaries.tokenInfoDictionary.getFeatures(node.name);
-      final features = featuresLine?.split(',') ?? [];
-      return formatter.formatEntry(node.name, lastPos + node.startPos, node.type, features);
-    } else if (node.type == 'UNKNOWN') {
-      final featuresLine = dictionaries.unknownDictionary.getFeatures(node.name);
-      final features = featuresLine?.split(',') ?? [];
-      return formatter.formatUnknownEntry(node.name, lastPos + node.startPos, node.type, features, node.surfaceForm!);
-    } else {
-      return formatter.formatEntry(node.name, lastPos + node.startPos, node.type, []);
-    }
+  UnknownToken _formatNode(ViterbiNode node, int lastPos) {
+    final featuresLine = dictionaries.tokenInfoDictionary.getFeatures(node.name);
+    final features = featuresLine?.split(',') ?? [];
+    return UnknownToken.from(node.name, lastPos + node.startPos, node.type, features, node.surfaceForm);
   }
 
   List<String> _splitByPunctuation(String text) {

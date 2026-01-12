@@ -16,7 +16,7 @@ import 'package:kuromoji/src/dict/data/unk_pos.dat.dart';
 class DictionaryLoader {
   DictionaryLoader();
 
-  Future<Map<String, Uint8List>> load() async {
+  Map<String, Uint8List> load() {
     final decoder = GZipDecoder();
 
     return {
