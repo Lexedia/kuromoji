@@ -14,7 +14,7 @@ class Tokenizer {
         viterbiSearcher = ViterbiSearcher(dictionaries.connectionCosts);
 
   List<UnknownToken> tokenize(String text) {
-    final sentences = _splitByPunctuation(text);
+    final sentences = _splitByPunctuation(text).where((s) => s.isNotEmpty);
     final tokens = <UnknownToken>[];
     for (final sentence in sentences) {
       _tokenizeForSentence(sentence, tokens);
@@ -43,6 +43,22 @@ class Tokenizer {
   }
 
   List<String> _splitByPunctuation(String text) {
-    return text.split(RegExp(r'[、。]'));
+    List<String> sentences = [];
+    String tail = text;
+
+    while (true) {
+      if (tail.isEmpty) {
+        break;
+      }
+      var index = tail.indexOf(RegExp(r'[、。]'));
+      if (index < 0) {
+        sentences.add(tail);
+        break;
+      }
+      sentences.add(tail.substring(0, index + 1));
+      tail = tail.substring(index + 1);
+    }
+
+    return sentences;
   }
 }
