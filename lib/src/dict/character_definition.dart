@@ -4,6 +4,8 @@ import 'package:kuromoji/src/util/byte_buffer.dart';
 import 'package:kuromoji/src/dict/invoke_definition_map.dart';
 import 'package:kuromoji/src/dict/character_class.dart';
 
+const hexpattern = '(0x[0-9A-F]{4})';
+
 class CharacterDefinition {
   final Uint8List characterCategoryMap = Uint8List(65536);
   final Uint32List compatibleCategoryMap = Uint32List(65536);
@@ -37,19 +39,23 @@ class CharacterDefinition {
   }
 
   void _parseCategoryMapping(String line) {
-    final parts = line.split(RegExp(r'\s+'));
-    final range = parts[0].split('..');
-    final start = int.parse(range[0]);
-    final end = range.length > 1 ? int.parse(range[1]) : start;
-    final defaultCategory = parts[1];
-    final compatibleCategories = parts.sublist(2);
+    bool isRange = line.contains('..');
+    final m = RegExp('^${isRange ? '$hexpattern\\.\\.$hexpattern' : hexpattern}(?:\\s+([^#\\s]+))(?:\\s+([^#\\s]+))*')
+        .firstMatch(line)!;
+
+    final start = int.parse(m[1]!);
+    final end = isRange ? int.parse(m[2]!) : start;
+    final defaultCategory = m[isRange ? 3 : 2]!;
+    final compatibleCategories = [for (int i = (isRange ? 4 : 3); i <= m.groupCount; i++) m[i]].nonNulls;
 
     for (var codePoint = start; codePoint <= end; codePoint++) {
       characterCategoryMap[codePoint] = invokeDefinitionMap.lookup(defaultCategory);
+      var curr = compatibleCategoryMap[codePoint];
       for (final category in compatibleCategories) {
         final classId = invokeDefinitionMap.lookup(category);
-        compatibleCategoryMap[codePoint] |= 1 << classId;
+        curr |= (1 << classId);
       }
+      compatibleCategoryMap[codePoint] = curr;
     }
   }
 
@@ -70,7 +76,7 @@ class CharacterDefinition {
     final bitset = compatibleCategoryMap[code];
     final classes = <CharacterClass>[];
     for (var i = 0; i < 32; i++) {
-      if ((bitset & (1 << i)) != 0) {
+      if (((bitset << (31 - i)) >>> 31) == 1) {
         final charClass = invokeDefinitionMap.getCharacterClass(i);
         if (charClass != null) {
           classes.add(charClass);
