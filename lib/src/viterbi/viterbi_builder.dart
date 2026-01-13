@@ -14,7 +14,7 @@ class ViterbiBuilder {
     final ubd = dictionaries.unknownDictionary.buffer.buffer.buffer.asByteData();
 
     String key;
-    for (var pos = 0; pos < text.length; pos++) {
+    for (var pos = 0; pos < text.runes.length; pos++) {
       final tail = text.substring(pos);
       final vocabulary = dictionaries.trie.commonPrefixSearch(tail).toList();
 

@@ -1,8 +1,14 @@
+import 'package:kuromoji/src/dict/data/char.dart';
+import 'package:kuromoji/src/dictionary_loader.dart';
+import 'package:meta/meta.dart';
+
 import 'package:kuromoji/src/dict/dynamic_dictionaries.dart';
 import 'package:kuromoji/src/token.dart';
 import 'package:kuromoji/src/viterbi/viterbi_builder.dart';
 import 'package:kuromoji/src/viterbi/viterbi_searcher.dart';
 import 'package:kuromoji/src/viterbi/viterbi_node.dart';
+
+final pattern = RegExp(r'[、。]');
 
 class Tokenizer {
   final DynamicDictionaries dictionaries;
@@ -13,8 +19,15 @@ class Tokenizer {
       : viterbiBuilder = ViterbiBuilder(dictionaries),
         viterbiSearcher = ViterbiSearcher(dictionaries.connectionCosts);
 
+  factory Tokenizer.buildSync() {
+    final loader = DictionaryLoader();
+    final data = loader.load();
+    final dictionaries = DynamicDictionaries(data, charData);
+    return Tokenizer(dictionaries);
+  }
+
   List<UnknownToken> tokenize(String text) {
-    final sentences = _splitByPunctuation(text).where((s) => s.isNotEmpty);
+    final sentences = _splitByPunctuation(text);
     final tokens = <UnknownToken>[];
     for (final sentence in sentences) {
       _tokenizeForSentence(sentence, tokens);
@@ -50,7 +63,7 @@ class Tokenizer {
       if (tail.isEmpty) {
         break;
       }
-      var index = tail.indexOf(RegExp(r'[、。]'));
+      var index = tail.indexOf(pattern);
       if (index < 0) {
         sentences.add(tail);
         break;
@@ -60,5 +73,10 @@ class Tokenizer {
     }
 
     return sentences;
+  }
+
+  @visibleForTesting
+  List<String> test$$_splitByPunctuation(String text) {
+    return _splitByPunctuation(text);
   }
 }
