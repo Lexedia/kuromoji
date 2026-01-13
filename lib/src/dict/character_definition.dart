@@ -28,12 +28,12 @@ class CharacterDefinition {
   }
 
   void _parseCharCategory(int classId, String line) {
-    final parts = line.split(RegExp(r'\s+'));
-    final category = parts[0];
-    final invoke = int.parse(parts[1]);
-    final grouping = int.parse(parts[2]);
-    final maxLength = int.parse(parts[3]);
-    final charClass = CharacterClass(classId, category, invoke == 1, grouping == 1, maxLength);
+    final parts = RegExp(r'^(\w+)\s+(\d)\s+(\d)\s+(\d)').firstMatch(line)!;
+    final category = parts[1]!;
+    final invoke = parts[2]!;
+    final grouping = parts[3]!;
+    final maxLength = int.parse(parts[4]!);
+    final charClass = CharacterClass(classId, category, invoke == '1', grouping == '1', maxLength);
     invokeDefinitionMap.characterClasses.add(charClass);
     invokeDefinitionMap.categoryToId[category] = classId;
   }

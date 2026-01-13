@@ -61,5 +61,61 @@ void main() {
     test('lookup by 〇, return KANJINUMERIC as a compatible category', () {
       expect(lucc(String.fromCharCode(0x3007)).first.category, equals('KANJINUMERIC'));
     });
+
+    test('SPACE category', () {
+      final c = lu(' ');
+      expect(c.isGrouping, equals(true));
+      expect(c.isInvoke, equals(false));
+      expect(c.maxLength, equals(0));
+    });
+
+    test('KANJI category', () {
+      final c = lu('日');
+      expect(c.isGrouping, equals(false));
+      expect(c.isInvoke, equals(false));
+      expect(c.maxLength, equals(2));
+    });
+
+    test('SYMBOL category', () {
+      final c = lu('!');
+      expect(c.isGrouping, equals(true));
+      expect(c.isInvoke, equals(true));
+      expect(c.maxLength, equals(0));
+    });
+
+    test('NUMERIC category', () {
+      final c = lu('1');
+      expect(c.isGrouping, equals(true));
+      expect(c.isInvoke, equals(true));
+      expect(c.maxLength, equals(0));
+    });
+
+    test('ALPHA category', () {
+      final c = lu('A');
+      expect(c.isGrouping, equals(true));
+      expect(c.isInvoke, equals(true));
+      expect(c.maxLength, equals(0));
+    });
+
+    test('HIRAGANA category', () {
+      final c = lu('あ');
+      expect(c.isGrouping, equals(true));
+      expect(c.isInvoke, equals(false));
+      expect(c.maxLength, equals(2));
+    });
+
+    test('KATAKANA category', () {
+      final c = lu('ア');
+      expect(c.isGrouping, equals(true));
+      expect(c.isInvoke, equals(true));
+      expect(c.maxLength, equals(2));
+    });
+
+    test('KANJINUMERIC category', () {
+      final c = lu('一');
+      expect(c.isGrouping, equals(true));
+      expect(c.isInvoke, equals(true));
+      expect(c.maxLength, equals(0));
+    });
   });
 }
