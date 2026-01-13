@@ -1,3 +1,9 @@
+## 2.0.0-dev.1
+- `TokenizerBuilder` has been removed, use `Tokenizer.buildSync` directly.
+- `Tokenizer.tokenize` now returns a `List<UnknownToken>` instead of `List<Map<String, Object?>>`. To have the old behaviour, you can call `toJson` on the token instance.
+- Fixed an issue with surrogate pairs not being handled correctly.
+- This also fixed an issue when parsing the character definitions file, which would cause the tokenizer to not work correctly in some cases.
+
 ## 1.0.5
 - This adds web support and moves to a base64 embedding for the dictionaries.
 Thanks to [Bruno D'Luka](https://github.com/bdlukaa) for his PR.
